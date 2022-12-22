@@ -8,9 +8,8 @@ namespace MineSweeper
     {
         int rows = 10;
         int cols = 10;
-        Field field = new Field(10, 10);
+        Field field;
 
-        Tile[][] field_arr= new Tile[10][];
         public Form1()
         {
             InitializeComponent();
@@ -30,56 +29,25 @@ namespace MineSweeper
 
         private void generate_field()
         {
-            
+            field = new Field(rows, cols);
             splitContainer1.Panel2.Controls.Clear();
 
             for (int i = 0; i < rows; i++)
             {
-                field_arr[i] = new Tile[cols];
                 for (int j = 0; j < cols; j++)
                 {
-                    
-                    field_arr[i][j] = new Tile
+                    Tile tile = new Tile
                     {
                         Dock = DockStyle.Fill,
                         TabIndex = 0,
                         UseVisualStyleBackColor = true,  
                     };
-                    field_arr[i][j].set_coords(i, j);
-                    field_arr[i][j].MouseDown += (sender, e2) => tile_Click((Tile)sender, e2);
+                    tile.set_coords(i, j);
+                    tile.MouseDown += (sender, e2) => tile_Click((Tile)sender, e2);
+                    field.Controls.Add(tile);
                 };
-                field.Controls.AddRange(field_arr[i]);
             }
-            //________________________
-            Random rn = new Random();
-            int X, Y;
 
-            for (int i = 0; i < 10; i++)
-            {
-                X = rn.Next(0, 10);
-                Y = rn.Next(0, 10);
-                while (field_arr[X][Y].is_bomb())
-                {
-                    X = rn.Next(0, 10);
-                    Y = rn.Next(0, 10);
-                }
-
-                Debug.WriteLine(String.Format("{0}: [{1} {2}]", i, X, Y));
-
-                field_arr[X][Y].make_bomb();
-
-                for (int a = -1; a < 2; a++)
-                {
-                    for (int b = -1; b < 2; b++)
-                    {
-                        if ((X + a > -1) && (Y + b > -1) && (X + a < rows) && (Y + b < cols) && (!field_arr[X + a][Y + b].is_bomb()))
-                        {
-                            field_arr[X + a][Y + b].add_surrounding_info();
-                        }
-                    }
-                }
-            }
-            //________________
             splitContainer1.Panel2.Controls.Add(field);
         }
 
@@ -90,7 +58,12 @@ namespace MineSweeper
 
         private void tile_Click(Tile sender, MouseEventArgs e)
         {
+            if (!field.has_bombs())
+            {
+                field.generate_bombs(rows, cols, sender);
+            }
             
+
             switch (e.Button)
             {
                 case MouseButtons.Left:

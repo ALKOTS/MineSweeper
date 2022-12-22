@@ -31,36 +31,41 @@ namespace MineSweeper
             return hasBomb;
         }
 
-        public void generate_bombs()
+        public void generate_bombs(int rows, int cols, Tile clicked_tile)
         {
-            //Random rn = new Random();
-            //int X, Y;
+            Random rn = new Random();
+            int X, Y;
 
-            //for (int i = 0; i < 10; i++)
-            //{
-            //    X = rn.Next(0, 10);
-            //    Y = rn.Next(0, 10);
-            //    while (field_arr[X][Y].is_bomb())
-            //    {
-            //        X = rn.Next(0, 10);
-            //        Y = rn.Next(0, 10);
-            //    }
 
-            //    Debug.WriteLine(String.Format("{0}: [{1} {2}]", i, X, Y));
 
-            //    field_arr[X][Y].make_bomb();
+            for (int i = 0; i < 10; i++)
+            {
+                X = rn.Next(0, 10);
+                Y = rn.Next(0, 10);
+                Tile tile = (Tile)GetControlFromPosition(X, Y);
 
-            //    for (int a = -1; a < 2; a++)
-            //    {
-            //        for (int b = -1; b < 2; b++)
-            //        {
-            //            if ((X + a > -1) && (Y + b > -1) && (X + a < rows) && (Y + b < cols) && (!field_arr[X + a][Y + b].is_bomb()))
-            //            {
-            //                field_arr[X + a][Y + b].add_surrounding_info();
-            //            }
-            //        }
-            //    }
-            //}
+                while (tile.is_bomb() || (Y == clicked_tile.get_coords()[0] && X == clicked_tile.get_coords()[1])) //????
+                {
+                    X = rn.Next(0, 10);
+                    Y = rn.Next(0, 10);
+                    tile = (Tile)GetControlFromPosition(X, Y);
+                }
+
+                Debug.WriteLine(String.Format("{0}: [{1} {2}]", i, X, Y));
+
+                tile.make_bomb();
+
+                for (int a = -1; a < 2; a++)
+                {
+                    for (int b = -1; b < 2; b++)
+                    {
+                        if ((X + a > -1) && (Y + b > -1) && (X + a < rows) && (Y + b < cols))
+                        {
+                            ((Tile)GetControlFromPosition(X + a, Y + b)).add_surrounding_info();
+                        }
+                    }
+                }
+            }
 
             hasBomb = true;
         }
