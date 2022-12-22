@@ -4,41 +4,11 @@ using System.Windows.Forms;
 
 namespace MineSweeper
 {
-
-    public class Tile : Button
-    {
-
-        bool isBomb = false;
-        int bombsAround = 0;
-        public Tile() { 
-        }
-
-        public void make_bomb()
-        {
-            isBomb = true;
-            this.BackColor= Color.Red;
-        }
-
-        public bool is_bomb()
-        {
-            return isBomb;
-        }
-
-        public int get_surroundings()
-        {
-            return bombsAround;
-        }
-
-        public void add_surrounding_info()
-        {
-            this.BackColor= Color.Green;
-            bombsAround++;
-        }
-    }
     public partial class Form1 : Form
     {
         int rows = 10;
         int cols = 10;
+        Field field = new Field(10, 10);
 
         Tile[][] field_arr= new Tile[10][];
         public Form1()
@@ -46,22 +16,22 @@ namespace MineSweeper
             InitializeComponent();
         }
 
+        private void end_game(bool result)
+        {
+            if (result)
+            {
+                MessageBox.Show("You win!");
+            }
+            else
+            {
+                MessageBox.Show("You lose!");
+            }
+        }
+
         private void generate_field()
         {
-            TableLayoutPanel field = new TableLayoutPanel();
+            
             splitContainer1.Panel2.Controls.Clear();
-
-            field.ColumnCount = cols;
-            field.RowCount = rows;
-            for (int i = 0; i < rows; i++)
-            {
-                field.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-                field.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            }
-            field.Dock = DockStyle.Fill;
-            field.Location = new Point(0, 0);
-            field.Size = new Size(800, 364);
-            field.TabIndex = 0;
 
             for (int i = 0; i < rows; i++)
             {
@@ -73,14 +43,14 @@ namespace MineSweeper
                     {
                         Dock = DockStyle.Fill,
                         TabIndex = 0,
-                        //Text = String.Format("{0}, {1}", i, j),
-                        UseVisualStyleBackColor = true,
+                        UseVisualStyleBackColor = true,  
                     };
-                    field_arr[i][j].Click += (sender, e2) => tile_Click((Tile)sender, e2);
+                    field_arr[i][j].set_coords(i, j);
+                    field_arr[i][j].MouseDown += (sender, e2) => tile_Click((Tile)sender, e2);
                 };
                 field.Controls.AddRange(field_arr[i]);
             }
-
+            //________________________
             Random rn = new Random();
             int X, Y;
 
@@ -88,7 +58,7 @@ namespace MineSweeper
             {
                 X = rn.Next(0, 10);
                 Y = rn.Next(0, 10);
-                while(field_arr[X][Y].is_bomb())
+                while (field_arr[X][Y].is_bomb())
                 {
                     X = rn.Next(0, 10);
                     Y = rn.Next(0, 10);
@@ -102,14 +72,14 @@ namespace MineSweeper
                 {
                     for (int b = -1; b < 2; b++)
                     {
-                        if((X+a > -1)&&(Y+b > -1)&&(X+a < rows)&&(Y+b < cols)&&(!field_arr[X+a][Y+b].is_bomb()))
+                        if ((X + a > -1) && (Y + b > -1) && (X + a < rows) && (Y + b < cols) && (!field_arr[X + a][Y + b].is_bomb()))
                         {
-                            field_arr[X+a][Y+b].add_surrounding_info();
+                            field_arr[X + a][Y + b].add_surrounding_info();
                         }
                     }
                 }
             }
-
+            //________________
             splitContainer1.Panel2.Controls.Add(field);
         }
 
@@ -118,10 +88,28 @@ namespace MineSweeper
             generate_field();
         }
 
-        private void tile_Click(Tile sender, EventArgs e)
+        private void tile_Click(Tile sender, MouseEventArgs e)
         {
-            sender.Text = sender.is_bomb() ? "Bomb" : sender.get_surroundings().ToString();
-            Debug.WriteLine(e.ToString());
+            
+            switch (e.Button)
+            {
+                case MouseButtons.Left:
+                    if (sender.is_bomb())
+                    {
+                        end_game(false);
+                    }
+                    else
+                    {
+                        sender.Text = sender.get_surroundings().ToString();
+                    }
+                    break;
+                case MouseButtons.Right:
+                    sender.Text = "Flag";
+                    break;
+                default:
+                    Debug.WriteLine("Вася чорт");
+                    break;
+            }
         }
     }
 }
