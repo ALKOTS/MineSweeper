@@ -11,16 +11,38 @@ namespace MineSweeper
 
         bool isBomb = false;
         bool isOpen = false;
+        bool isFlagged = false;
         int bombsAround = 0;
         int[] coords = new int[2];
         public Tile()
         {
         }
 
+        public void flag()
+        {
+            if (isFlagged)
+            {
+                isFlagged = false;
+                //BackColor = Color.White;
+                this.UseVisualStyleBackColor = true;
+            }
+            else
+            {
+                isFlagged = true;
+                //this.Text = "F";
+                BackColor = Color.Red;
+            }
+        }
+
+        public bool is_flagged()
+        {
+            return isFlagged;
+        }
+
         public void make_bomb()
         {
             isBomb = true;
-            this.BackColor = Color.Red;
+            //this.BackColor = Color.Red;
         }
 
         public bool is_open()
@@ -28,7 +50,7 @@ namespace MineSweeper
             return isOpen;
         }
 
-        public bool open()
+        public bool open_tile()
         {
             isOpen = true;
             if (is_bomb())
@@ -36,6 +58,7 @@ namespace MineSweeper
                 return false;
             }
             this.Text = bombsAround.ToString();
+            BackColor = Color.White;
             return true;
         }
 
@@ -52,6 +75,7 @@ namespace MineSweeper
         public void add_surrounding_info()
         {
             //this.BackColor = Color.Green;
+            
             bombsAround++;
         }
 

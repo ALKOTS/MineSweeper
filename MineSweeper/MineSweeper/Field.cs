@@ -9,7 +9,7 @@ namespace MineSweeper
 {
     public class Field : TableLayoutPanel
     {
-        bool hasBomb = false;
+        bool hasBombs = false;
         
         public Field(int rows, int cols)
         {
@@ -22,32 +22,35 @@ namespace MineSweeper
             }
             this.Dock = DockStyle.Fill;
             this.Location = new Point(0, 0);
-            this.Size = new Size(800, 364);
+            //this.Size = new Size(800, 364);
             this.TabIndex = 0;
         }
 
         public bool has_bombs()
         {
-            return hasBomb;
+            return hasBombs;
         }
 
-        public void generate_bombs(int rows, int cols, Tile clicked_tile)
+        public Tile[] generate_bombs(int rows, int cols, Tile clicked_tile, int bombs_amount)
         {
             Random rn = new Random();
             int X, Y;
 
+            Tile[] bombs = new Tile[bombs_amount];
+            
 
 
-            for (int i = 0; i < 10; i++)
+
+            for (int i = 0; i < bombs_amount; i++)
             {
-                X = rn.Next(0, 10);
-                Y = rn.Next(0, 10);
+                X = rn.Next(0, rows);
+                Y = rn.Next(0, cols);
                 Tile tile = (Tile)GetControlFromPosition(X, Y);
 
                 while (tile.is_bomb() || (Y == clicked_tile.get_coords()[0] && X == clicked_tile.get_coords()[1])) //????
                 {
-                    X = rn.Next(0, 10);
-                    Y = rn.Next(0, 10);
+                    X = rn.Next(0, rows);
+                    Y = rn.Next(0, cols);
                     tile = (Tile)GetControlFromPosition(X, Y);
                 }
 
@@ -65,9 +68,11 @@ namespace MineSweeper
                         }
                     }
                 }
+                bombs[i] = tile;
             }
 
-            hasBomb = true;
+            hasBombs = true;
+            return bombs;
         }
     }
             

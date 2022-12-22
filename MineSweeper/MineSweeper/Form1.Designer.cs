@@ -84,7 +84,7 @@
             this.scoreLbl.Name = "scoreLbl";
             this.scoreLbl.Size = new System.Drawing.Size(38, 82);
             this.scoreLbl.TabIndex = 0;
-            this.scoreLbl.Text = "label1";
+            this.scoreLbl.Text = "Score";
             this.scoreLbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Form1
