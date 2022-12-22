@@ -10,6 +10,7 @@ namespace MineSweeper
     {
 
         bool isBomb = false;
+        bool isOpen = false;
         int bombsAround = 0;
         int[] coords = new int[2];
         public Tile()
@@ -20,6 +21,22 @@ namespace MineSweeper
         {
             isBomb = true;
             this.BackColor = Color.Red;
+        }
+
+        public bool is_open()
+        {
+            return isOpen;
+        }
+
+        public bool open()
+        {
+            isOpen = true;
+            if (is_bomb())
+            {
+                return false;
+            }
+            this.Text = bombsAround.ToString();
+            return true;
         }
 
         public bool is_bomb()

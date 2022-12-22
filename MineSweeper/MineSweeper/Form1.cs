@@ -15,6 +15,39 @@ namespace MineSweeper
             InitializeComponent();
         }
 
+        private bool open_tile(Tile tile)
+        {
+            if (tile.is_open())
+            {
+                return true;
+            }
+
+            if (!tile.open())
+            {
+                return false;
+            }
+
+            if (tile.get_surroundings() == 0)
+            {
+                int x = tile.get_coords()[0];
+                int y = tile.get_coords()[1];
+                for (int a = -1; a < 2; a++)
+                {
+                    for (int b = -1; b < 2; b++)
+                    {
+                        if ((x + a > -1) && (y + b > -1) && (x + a < rows) && (y + b < cols))
+                        {
+                            bool temp_val = open_tile(((Tile)field.GetControlFromPosition(x + a, y + b)));
+                        }
+                    }
+                }
+
+
+            }
+
+            return true;
+        }
+
         private void end_game(bool result)
         {
             if (result)
@@ -67,14 +100,11 @@ namespace MineSweeper
             switch (e.Button)
             {
                 case MouseButtons.Left:
-                    if (sender.is_bomb())
+                    if (!open_tile(sender))
                     {
                         end_game(false);
                     }
-                    else
-                    {
-                        sender.Text = sender.get_surroundings().ToString();
-                    }
+
                     break;
                 case MouseButtons.Right:
                     sender.Text = "Flag";
