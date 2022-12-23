@@ -21,15 +21,17 @@ namespace MineSweeper
         public Form1()
         {
             InitializeComponent();
-            resetBtn.Text = ":)";
-            timerLbl.Text = "0";
+            
 
             
-            timer1.Interval = 1000;//5 minutes
+            timer1.Interval = 1000;
             timer1.Tick += new System.EventHandler(timeCountDown);
-            timer1.Start();
+            
+
+            resetBtn_Click(null, null);
         }
 
+       
         private void timeCountDown(object? sender, EventArgs e)
         {
             timerLbl.Text = (int.Parse(timerLbl.Text) + 1).ToString();
@@ -123,6 +125,7 @@ namespace MineSweeper
                 resetBtn.Text = ":C";
             }
             isGameOver = true;
+            timer1.Stop();
         }
 
         private void generate_field()
@@ -149,16 +152,18 @@ namespace MineSweeper
             splitContainer1.Panel2.Controls.Add(field);
         }
 
-        private void resetBtn_Click(object sender, EventArgs e)
+        private void resetBtn_Click(object? sender, EventArgs? e)
         {
             isGameOver = false;
-            scoreLbl.Text = "Score";
+            scoreLbl.Text = bombs_amount.ToString();
             flags = 0;
             free_tiles = 0;
             resetBtn.Text = ":)";
             timerLbl.Text = "0";
             resetBtn.UseVisualStyleBackColor = true;
+
             generate_field();
+            timer1.Start();
         }
 
         private void tile_Click(Tile sender, MouseEventArgs e)
