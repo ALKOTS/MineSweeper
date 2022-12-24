@@ -20,14 +20,9 @@ namespace MineSweeper
 
         public Form1()
         {
-            InitializeComponent();
-            
-
-            
+            InitializeComponent();   
             timer1.Interval = 1000;
-            timer1.Tick += new System.EventHandler(timeCountDown);
-            
-
+            timer1.Tick += new EventHandler(timeCountDown);          
             resetBtn_Click(null, null);
         }
 
@@ -37,7 +32,7 @@ namespace MineSweeper
             timerLbl.Text = (int.Parse(timerLbl.Text) + 1).ToString();
         }
 
-
+        
         private bool open_tile(Tile tile)
         {
             if (tile.is_open())
@@ -55,15 +50,15 @@ namespace MineSweeper
 
             if (tile.get_surroundings() == 0)
             {
-                int x = tile.get_coords()[1];
-                int y = tile.get_coords()[0]; // I'm not sure why this is reversed, but it is.
+                int x = tile.get_coords()[0];
+                int y = tile.get_coords()[1]; 
                 for (int a = -1; a < 2; a++)
                 {
                     for (int b = -1; b < 2; b++)
                     {
-                        if ((x + a > -1) && (y + b > -1) && (x + a < rows) && (y + b < cols))
+                        if ((y + a > -1) && (x + b > -1) && (y + a < rows) && (x + b < cols))
                         {
-                            open_tile(((Tile)field.GetControlFromPosition(x + a, y + b)));
+                            open_tile(((Tile)field.GetControlFromPosition(x + b, y + a)));
                         }
                     }
                 }
@@ -74,16 +69,20 @@ namespace MineSweeper
 
         private void repeated_click(Tile tile) //Вся эта функция была написана копайлотом от начала и до конца
         {
-            int x = tile.get_coords()[1];
-            int y = tile.get_coords()[0]; // I'm not sure why this is reversed, but it is.
+            int x = tile.get_coords()[0];
+            int y = tile.get_coords()[1]; 
+            Debug.WriteLine(String.Format("Clicked tile: [{0} {1}]", x, y));
+
+
+            
             int flags_around = 0;
             for (int a = -1; a < 2; a++)
             {
                 for (int b = -1; b < 2; b++)
                 {
-                    if ((x + a > -1) && (y + b > -1) && (x + a < rows) && (y + b < cols))
+                    if ((y + a > -1) && (x + b > -1) && (y + a < rows) && (x + b < cols))
                     {
-                        if (((Tile)field.GetControlFromPosition(x + a, y + b)).is_flagged())
+                        if (((Tile)field.GetControlFromPosition(x + b, y + a)).is_flagged())
                         {
                             flags_around += 1;
                         }
@@ -97,9 +96,9 @@ namespace MineSweeper
                 {
                     for (int b = -1; b < 2; b++)
                     {
-                        if ((x + a > -1) && (y + b > -1) && (x + a < rows) && (y + b < cols) && !((Tile)field.GetControlFromPosition(x + a, y + b)).is_flagged())
+                        if ((y + a > -1) && (x + b > -1) && (y + a < rows) && (x + b < cols) && !((Tile)field.GetControlFromPosition(x + b, y + a)).is_flagged())
                         {
-                            if (!open_tile(((Tile)field.GetControlFromPosition(x + a, y + b))))
+                            if (!open_tile(((Tile)field.GetControlFromPosition(x + b, y + a))))
                             {
                                 end_game(false);
                                 return;
@@ -130,7 +129,14 @@ namespace MineSweeper
 
         private void generate_field()
         {
-            field = new Field(rows, cols);
+            field = new Field(rows, cols)
+            {
+                Dock = DockStyle.Fill,
+                Location = new Point(0, 0),
+                //Size = new Size(25 * cols, 25 * rows),
+            };
+            this.Size = new Size(25 * cols + 15, 30 * rows + 50);
+
             splitContainer1.Panel2.Controls.Clear();
 
             for (int i = 0; i < rows; i++)
@@ -139,13 +145,16 @@ namespace MineSweeper
                 {
                     Tile tile = new Tile
                     {
-                        Dock = DockStyle.Fill,
-                        TabIndex = 0,
-                        UseVisualStyleBackColor = true,  
+                        Location = new Point(0, 0),
+                        //Dock = DockStyle.Fill,
+                        UseVisualStyleBackColor = true,
+                        Size = new Size(25, 25),
+                        Margin = new Padding(0, 0, 0, 0),
                     };
-                    tile.set_coords(i, j);
+                    tile.set_coords(j, i);
                     tile.MouseDown += (sender, e2) => tile_Click((Tile)sender, e2);
                     field.Controls.Add(tile);
+                    
                 };
             }
 
@@ -225,5 +234,7 @@ namespace MineSweeper
             }
             scoreLbl.Text = (bombs_amount - flags).ToString();
         }
+
+
     }
 }

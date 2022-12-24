@@ -13,17 +13,22 @@ namespace MineSweeper
         
         public Field(int rows, int cols)
         {
-            this.ColumnCount = cols;
-            this.RowCount = rows;
+            ColumnCount = cols;
+            RowCount = rows;
             for (int i = 0; i < rows; i++)
             {
-                this.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-                this.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+                
+                RowStyles.Add(new RowStyle(SizeType.Percent));
             }
-            this.Dock = DockStyle.Fill;
-            this.Location = new Point(0, 0);
-            //this.Size = new Size(800, 364);
-            this.TabIndex = 0;
+            for (int i = 0; i < cols; i++)
+            {
+                ColumnStyles.Add(new ColumnStyle(SizeType.Percent));
+            }
+
+            Dock = DockStyle.Fill;
+            Location = new Point(0, 0);
+            //Size = new Size(800, 364);
+            TabIndex = 0;
         }
 
         public bool has_bombs()
@@ -43,14 +48,14 @@ namespace MineSweeper
 
             for (int i = 0; i < bombs_amount; i++)
             {
-                X = rn.Next(0, rows);
-                Y = rn.Next(0, cols);
+                X = rn.Next(0, cols);
+                Y = rn.Next(0, rows);
                 Tile tile = (Tile)GetControlFromPosition(X, Y);
 
-                while (tile.is_bomb() || (Y == clicked_tile.get_coords()[0] && X == clicked_tile.get_coords()[1])) //????
+                while (tile.is_bomb() || (X == clicked_tile.get_coords()[0] && Y == clicked_tile.get_coords()[1])) 
                 {
-                    X = rn.Next(0, rows);
-                    Y = rn.Next(0, cols);
+                    X = rn.Next(0, cols);
+                    Y = rn.Next(0, rows);
                     tile = (Tile)GetControlFromPosition(X, Y);
                 }
 
@@ -62,9 +67,9 @@ namespace MineSweeper
                 {
                     for (int b = -1; b < 2; b++)
                     {
-                        if ((X + a > -1) && (Y + b > -1) && (X + a < rows) && (Y + b < cols))
+                        if ((Y + a > -1) && (X + b > -1) && (Y + a < rows) && (X + b < cols))
                         {
-                            ((Tile)GetControlFromPosition(X + a, Y + b)).add_surrounding_info();
+                            ((Tile)GetControlFromPosition(X + b, Y + a)).add_surrounding_info();
                         }
                     }
                 }
