@@ -69,6 +69,7 @@
             // 
             // label3
             // 
+            this.label3.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label3.Location = new System.Drawing.Point(577, 13);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(68, 15);
@@ -78,6 +79,7 @@
             // 
             // bombBox
             // 
+            this.bombBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.bombBox.Location = new System.Drawing.Point(577, 31);
             this.bombBox.Name = "bombBox";
             this.bombBox.Size = new System.Drawing.Size(68, 23);
@@ -87,10 +89,8 @@
             // 
             // splitContainer2
             // 
-            this.splitContainer2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer2.Location = new System.Drawing.Point(115, 0);
+            this.splitContainer2.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.splitContainer2.Location = new System.Drawing.Point(121, 0);
             this.splitContainer2.Name = "splitContainer2";
             // 
             // splitContainer2.Panel1
@@ -117,7 +117,11 @@
             // 
             // xBox
             // 
+            this.xBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.xBox.Location = new System.Drawing.Point(3, 31);
+            this.xBox.MaxLength = 3;
             this.xBox.Name = "xBox";
             this.xBox.Size = new System.Drawing.Size(66, 23);
             this.xBox.TabIndex = 0;
@@ -135,7 +139,11 @@
             // 
             // yBox
             // 
+            this.yBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.yBox.Location = new System.Drawing.Point(3, 31);
+            this.yBox.MaxLength = 3;
             this.yBox.Name = "yBox";
             this.yBox.Size = new System.Drawing.Size(68, 23);
             this.yBox.TabIndex = 0;
@@ -155,9 +163,9 @@
             // resetBtn
             // 
             this.resetBtn.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.resetBtn.Location = new System.Drawing.Point(372, 29);
+            this.resetBtn.Location = new System.Drawing.Point(388, 29);
             this.resetBtn.Name = "resetBtn";
-            this.resetBtn.Size = new System.Drawing.Size(59, 25);
+            this.resetBtn.Size = new System.Drawing.Size(25, 25);
             this.resetBtn.TabIndex = 1;
             this.resetBtn.Text = "Reset";
             this.resetBtn.UseMnemonic = false;

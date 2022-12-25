@@ -22,7 +22,9 @@ namespace MineSweeper
         {
             InitializeComponent();   
             timer1.Interval = 1000;
-            timer1.Tick += new EventHandler(timeCountDown);          
+            timer1.Tick += new EventHandler(timeCountDown);
+            
+            
             resetBtn_Click(null, null);
         }
 
@@ -132,8 +134,9 @@ namespace MineSweeper
             field = new Field(rows, cols)
             {
                 Dock = DockStyle.Fill,
+                Anchor = AnchorStyles.None,
                 Location = new Point(0, 0),
-                //Size = new Size(25 * cols, 25 * rows),
+                Size = new Size(25*cols, 25*rows),
             };
             this.Size = new Size(25 * cols + 15, 30 * rows + 50);
 
@@ -143,18 +146,12 @@ namespace MineSweeper
             {
                 for (int j = 0; j < cols; j++)
                 {
-                    Tile tile = new Tile
-                    {
-                        Location = new Point(0, 0),
-                        //Dock = DockStyle.Fill,
-                        UseVisualStyleBackColor = true,
-                        Size = new Size(25, 25),
-                        Margin = new Padding(0, 0, 0, 0),
+                    Tile tile = new Tile() {
+                        coords = new int[] { j, i },
                     };
-                    tile.set_coords(j, i);
-                    tile.MouseDown += (sender, e2) => tile_Click((Tile)sender, e2);
-                    field.Controls.Add(tile);
                     
+                    tile.MouseDown += (sender, e2) => tile_Click((Tile)sender, e2);
+                    field.Controls.Add(tile); 
                 };
             }
 
@@ -170,7 +167,8 @@ namespace MineSweeper
             resetBtn.Text = ":)";
             timerLbl.Text = "0";
             resetBtn.UseVisualStyleBackColor = true;
-
+            rows = Int16.Parse(yBox.Text);
+            cols = Int16.Parse(xBox.Text);
             generate_field();
             timer1.Start();
         }
@@ -213,22 +211,15 @@ namespace MineSweeper
                     {
                         return;
                     }
-                    if (sender.is_flagged())
-                    {
-                        flags --;
-                    }
-                    else
-                    {
-                        flags ++;
-                    }
-                    sender.flag();
+                    
+                    flags = sender.flag(flags);
                     
                     break;
                 default:
                     Debug.WriteLine("Вася чорт");
                     break;
             }
-            if ((flags == bombs_amount) && (free_tiles == rows * cols - bombs_amount))
+            if (free_tiles == rows * cols - bombs_amount)
             {
                 end_game(true);
             }
