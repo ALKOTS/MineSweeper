@@ -81,6 +81,7 @@
             // 
             this.bombBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.bombBox.Location = new System.Drawing.Point(577, 31);
+            this.bombBox.MaxLength = 3;
             this.bombBox.Name = "bombBox";
             this.bombBox.Size = new System.Drawing.Size(68, 23);
             this.bombBox.TabIndex = 4;

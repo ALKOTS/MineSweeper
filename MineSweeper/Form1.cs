@@ -31,7 +31,7 @@ namespace MineSweeper
        
         private void timeCountDown(object? sender, EventArgs e)
         {
-            timerLbl.Text = (int.Parse(timerLbl.Text) + 1).ToString();
+            timerLbl.Text = Math.Min(999, int.Parse(timerLbl.Text) + 1).ToString();
         }
 
         
@@ -47,7 +47,12 @@ namespace MineSweeper
                 return false;
             }
 
-            free_tiles ++;
+            if (!tile.is_bomb())
+            {
+                free_tiles++;
+            }
+
+            
             
 
             if (tile.get_surroundings() == 0)
@@ -74,10 +79,8 @@ namespace MineSweeper
             int x = tile.get_coords()[0];
             int y = tile.get_coords()[1]; 
             Debug.WriteLine(String.Format("Clicked tile: [{0} {1}]", x, y));
-
-
-            
             int flags_around = 0;
+
             for (int a = -1; a < 2; a++)
             {
                 for (int b = -1; b < 2; b++)
@@ -98,7 +101,7 @@ namespace MineSweeper
                 {
                     for (int b = -1; b < 2; b++)
                     {
-                        if ((y + a > -1) && (x + b > -1) && (y + a < rows) && (x + b < cols) && !((Tile)field.GetControlFromPosition(x + b, y + a)).is_flagged())
+                        if ((y + a > -1) && (x + b > -1) && (y + a < rows) && (x + b < cols))
                         {
                             if (!open_tile(((Tile)field.GetControlFromPosition(x + b, y + a))))
                             {
@@ -108,7 +111,11 @@ namespace MineSweeper
                         }
                     }
                 }
-            }
+                if (free_tiles == rows * cols - bombs_amount)
+                {
+                    end_game(true);
+                }
+            } 
         }
 
         private void end_game(bool result)
@@ -123,7 +130,7 @@ namespace MineSweeper
             }
             else
             {
-                resetBtn.Text = ":C";
+                resetBtn.Text = ":(";
             }
             isGameOver = true;
             timer1.Stop();
@@ -131,13 +138,7 @@ namespace MineSweeper
 
         private void generate_field()
         {
-            field = new Field(rows, cols)
-            {
-                Dock = DockStyle.Fill,
-                Anchor = AnchorStyles.None,
-                Location = new Point(0, 0),
-                Size = new Size(25*cols, 25*rows),
-            };
+            field = new Field(rows, cols);
             this.Size = new Size(25 * cols + 15, 30 * rows + 50);
 
             splitContainer1.Panel2.Controls.Clear();
@@ -167,8 +168,9 @@ namespace MineSweeper
             resetBtn.Text = ":)";
             timerLbl.Text = "0";
             resetBtn.UseVisualStyleBackColor = true;
-            rows = Int16.Parse(yBox.Text);
-            cols = Int16.Parse(xBox.Text);
+            rows = Math.Min(Math.Max(Int32.Parse(yBox.Text),10),60);
+            cols = Math.Min(Math.Max(Int32.Parse(xBox.Text),10),60);
+            bombs_amount = Math.Min(Math.Max(Int32.Parse(bombBox.Text), 1), rows * cols - 1);
             generate_field();
             timer1.Start();
         }

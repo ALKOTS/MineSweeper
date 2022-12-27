@@ -13,11 +13,15 @@ namespace MineSweeper
         
         public Field(int rows, int cols)
         {
+            Dock = DockStyle.Fill;
+            Anchor = AnchorStyles.None;
+            Location = new Point(0, 0);
+            Size = new Size(25 * cols, 25 * rows);
+
             ColumnCount = cols;
             RowCount = rows;
             for (int i = 0; i < rows; i++)
-            {
-                
+            {    
                 RowStyles.Add(new RowStyle(SizeType.Percent));
             }
             for (int i = 0; i < cols; i++)

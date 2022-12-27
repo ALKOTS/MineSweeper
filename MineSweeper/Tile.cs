@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,7 +29,7 @@ namespace MineSweeper
             {
                 isFlagged = false;
                 //BackColor = Color.White;
-                this.UseVisualStyleBackColor = true;
+                UseVisualStyleBackColor = true;
                 flags--;
             }
             else
@@ -59,6 +60,10 @@ namespace MineSweeper
 
         public bool open_tile()
         {
+            if (is_flagged())
+            {
+                return true;
+            }
             isOpen = true;
             if (is_bomb())
             {
